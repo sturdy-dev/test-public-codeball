@@ -21,7 +21,7 @@ jobs:
 
     # If Codeball approved the contribution, add a "codeball:approved" label
     - name: Label Approved
-      uses: sturdy-dev/codeball-action/labeler@v2
+      uses: sturdy-dev/codeball-action/labeler@beta
       if: ${{ steps.codeball_status.outputs.approved == 'true' }}
       with:
         name: "codeball:approved"
@@ -31,7 +31,7 @@ jobs:
 
     # If Codeball did not approve the contribution, add a "codeball:needs-review" label
     - name: Label Needs Review
-      uses: sturdy-dev/codeball-action/labeler@v2
+      uses: sturdy-dev/codeball-action/labeler@beta
       if: ${{ steps.codeball_status.outputs.approved == 'false' }}
       with:
         name: "codeball:needs-review"
