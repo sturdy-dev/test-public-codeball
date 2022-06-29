@@ -1,4 +1,7 @@
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
 name: Codeball
 jobs:
   codeball_job:
