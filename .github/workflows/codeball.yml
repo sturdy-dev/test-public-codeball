@@ -2,7 +2,7 @@ on: [pull_request]
 name: Codeball
 jobs:
   codeball_job:
-    if: github.repository == 'sturdy-dev/codeball-action'
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     name: Codeball
     steps:
