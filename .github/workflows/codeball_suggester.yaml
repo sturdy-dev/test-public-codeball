@@ -19,9 +19,10 @@ jobs:
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
 
-    # If Codeball approved the contribution, approve the PR
-    - name: Approve PR
+    # post suggestions if any
+    - name: post suggestions
       uses: sturdy-dev/codeball-action/suggester@suggester
+      if: ${{ steps.codeball_status.outputs.suggested == 'true' }}
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
         
