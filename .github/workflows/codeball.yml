@@ -25,4 +25,9 @@ jobs:
       if: ${{ steps.codeball_status.outputs.approved == 'true' }}
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+        
+    - name: test suggester
+      uses: sturdy-dev/codeball-action/suggester@suggester
+      with:
+        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
 
