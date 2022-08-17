@@ -1,4 +1,4 @@
-on: [pull_request]
+on: [pull_request_review_comment]
 name: Codeball
 jobs:
   codeball_job:
@@ -10,19 +10,19 @@ jobs:
     # This step is asynchronous and will return a job id
     - name: Trigger Codeball
       id: codeball_baller
-      uses: sturdy-dev/codeball-action/baller@v2
+      uses: sturdy-dev/codeball-action/baller@suggester
 
     # Wait for Codeball to return the status
     - name: Get Status
       id: codeball_status
-      uses: sturdy-dev/codeball-action/status@v2
+      uses: sturdy-dev/codeball-action/status@suggester
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
 
-    # If Codeball approved the contribution, approve the PR
-    - name: Approve PR
-      uses: sturdy-dev/codeball-action/approver@v2
-      if: ${{ steps.codeball_status.outputs.approved == 'true' }}
+    # post suggestions if any
+    - name: post suggestions
+      uses: sturdy-dev/codeball-action/suggester@suggester
+      if: ${{ steps.codeball_status.outputs.suggested == 'true' }}
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
         
