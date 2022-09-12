@@ -24,5 +24,5 @@ jobs:
       if: ${{ steps.codeball_status.outputs.jobType == 'contribution' }}
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
-        approve: 'true'
+        approve: 'false'
 
