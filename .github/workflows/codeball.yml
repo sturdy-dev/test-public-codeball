@@ -18,58 +18,11 @@ jobs:
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
 
-    # If the Codeball confidence is high, add the "codeball:approved" label
-    - name: Label Approved
-      uses: sturdy-dev/codeball-action/labeler@remove-obsolete-approvals
-      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' && steps.codeball_status.outputs.confidence >= '0.935'  }}
-      with:
-        name: "codeball:approved"
-        color: "86efac" # green
-        remove-label-names: "codeball:needs-review,codeball:needs-careful-review"
-        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
-
-
-    # If the Codeball confidence is medium, add the "codeball:needs-review" label
-    - name: Label Needs Review
-      uses: sturdy-dev/codeball-action/labeler@remove-obsolete-approvals
-      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' && steps.codeball_status.outputs.confidence >= '0.300' && steps.codeball_status.outputs.confidence < '0.935'  }}
-      with:
-        name: "codeball:needs-review"
-        color: "bfdbfe" # blue
-        remove-label-names: "codeball:approved,codeball:needs-careful-review"
-        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
-
-
-    # If the Codeball confidence is low, add the "codeball:needs-careful-review" label
-    - name: Label Needs Careful Review
-      uses: sturdy-dev/codeball-action/labeler@remove-obsolete-approvals
-      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' && steps.codeball_status.outputs.confidence < '0.300' }}
-      with:
-        name: "codeball:needs-careful-review"
-        color: "fde68a" # amber
-        remove-label-names: "codeball:approved,codeball:needs-review"
-        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
-
-
     # If Codeball approved the contribution, approve the PR
     - name: Approve PR
       uses: sturdy-dev/codeball-action/approver@remove-obsolete-approvals
       if: ${{ steps.codeball_status.outputs.jobType == 'contribution' }}
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
-        approve: ${{ steps.codeball_status.outputs.confidence >= '0.935' }}
+        approve: 'false'
 
-    # If Codeball have code suggestions, add suggestions as comments
-    - name: Add Suggestions
-      uses: sturdy-dev/codeball-action/suggester@remove-obsolete-approvals
-      if: ${{ steps.codeball_status.outputs.suggested == 'true' && steps.codeball_status.outputs.jobType == 'comment' }}
-      with:
-        codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
-
-    # If Codeball didn't approve the contribution, fail the job.
-    - name: Fail Job
-      shell: bash
-      if: ${{ steps.codeball_status.outputs.approved == 'false' && steps.codeball_status.outputs.jobType == 'contribution' }}
-      run: |
-        echo "Not approved"
-        exit 1
