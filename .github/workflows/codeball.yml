@@ -2,28 +2,27 @@ on: [pull_request]
 name: Codeball
 jobs:
   codeball_job:
-    if: github.repository == 'sturdy-dev/codeball-action'
     runs-on: ubuntu-latest
     name: Codeball
     steps:
-    
     # Start a new Codeball review job
     # This step is asynchronous and will return a job id
     - name: Trigger Codeball
       id: codeball_baller
-      uses: sturdy-dev/codeball-action/baller@v2
+      uses: sturdy-dev/codeball-action/baller@remove-obsolete-approvals
 
     # Wait for Codeball to return the status
     - name: Get Status
       id: codeball_status
-      uses: sturdy-dev/codeball-action/status@v2
+      uses: sturdy-dev/codeball-action/status@remove-obsolete-approvals
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
 
     # If Codeball approved the contribution, approve the PR
     - name: Approve PR
-      uses: sturdy-dev/codeball-action/approver@v2
-      if: ${{ steps.codeball_status.outputs.approved == 'true' }}
+      uses: sturdy-dev/codeball-action/approver@remove-obsolete-approvals
+      if: ${{ steps.codeball_status.outputs.jobType == 'contribution' }}
       with:
         codeball-job-id: ${{ steps.codeball_baller.outputs.codeball-job-id }}
+        approve: 'false'
 
